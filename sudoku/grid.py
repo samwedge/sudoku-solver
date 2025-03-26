@@ -17,6 +17,9 @@ class Grid:
     def __init__(self, cells: list[Cell]):
         self._cells = cells
         self._validate_number_of_cells()
+        self._validate_no_duplicates_in_rows()
+        self._validate_no_duplicates_in_columns()
+        self._validate_no_duplicates_in_boxes()
 
     @classmethod
     def from_string(cls, string) -> Grid:
@@ -75,6 +78,23 @@ class Grid:
             cells = self.get_row(row_number)
             values_in_row = [cell.value for cell in cells if cell.value is not None]
 
-            if len(set(values_in_row)) == len(values_in_row):
+            if len(set(values_in_row)) != len(values_in_row):
                 raise ValueError(f"Duplicate values found in row: {row_number}")
+
+    def _validate_no_duplicates_in_columns(self):
+        for column_number in range(GRID_WIDTH):
+            cells = self.get_column(column_number)
+            values_in_column = [cell.value for cell in cells if cell.value is not None]
+
+            if len(set(values_in_column)) != len(values_in_column):
+                raise ValueError(f"Duplicate values found in column: {column_number}")
+
+    def _validate_no_duplicates_in_boxes(self):
+        for horizontal in range(BOX_SIZE):
+            for vertical in range(BOX_SIZE):
+                cells = self.get_box(horizontal, vertical)
+                values_in_box = [cell.value for cell in cells if cell.value is not None]
+
+                if len(set(values_in_box)) != len(values_in_box):
+                    raise ValueError(f"Duplicate values found in box: {horizontal}, {vertical}")
 
