@@ -2,9 +2,8 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 
+from sudoku.constants import GRID_WIDTH, BOX_SIZE
 
-GRID_WIDTH = 9
-BOX_SIZE = 3
 NULL_CHARACTER = "."
 
 
