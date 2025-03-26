@@ -1,6 +1,11 @@
+import logging
+
 from sudoku.constants import GRID_WIDTH, BOX_SIZE
 from sudoku.grid import Grid
 from sudoku.rules import Rules
+
+
+logger = logging.getLogger(__name__)
 
 
 class Solver:
@@ -9,9 +14,12 @@ class Solver:
 
     def solve(self) -> Grid:
         progressing = True
+        n_iterations = 0
         while progressing:
             progressing = self._iterate()
+            n_iterations += 1
 
+        logger.info(f"Finished progressing after {n_iterations} iterations")
         return self._grid
 
     def _iterate(self) -> bool:
@@ -32,14 +40,27 @@ class Solver:
                     column_candidates = Rules.missing_from_full_set(column)
                     box_candidates = Rules.missing_from_full_set(box)
 
-                    if len(row_candidates) == 1:
-                        cell.value = list(row_candidates)[0]
-                        progressing = True
-                    if len(column_candidates) == 1:
-                        cell.value = list(column_candidates)[0]
-                        progressing = True
-                    if len(box_candidates) == 1:
-                        cell.value = list(box_candidates)[0]
+                    candidates = row_candidates & column_candidates & box_candidates
+
+                    if len(candidates) == 1:
+                        cell.value = list(candidates)[0]
                         progressing = True
 
         return progressing
+
+
+if __name__ == '__main__':
+    logging.basicConfig(level=logging.INFO)
+    result = Solver(Grid.from_string("""
+        4 8 1 3 . . . 7 .
+        5 . 7 9 8 2 . . .
+        3 . . 1 . . . 6 8
+        . 3 . . . . 1 8 5
+        . 9 . . 2 5 . . 4
+        . 7 . 4 . 3 . . 9
+        . . . 2 9 . 8 . .
+        6 1 2 . . . 4 . .
+        . . 8 . 4 7 2 1 .
+        """)).solve()
+
+    logger.info(result.to_string())
