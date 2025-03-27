@@ -46,6 +46,10 @@ class Grid:
 
         return '\n'.join(row_strings)
 
+    def get_cell(self, row_number: int, column_number: int) -> Cell:
+        index = GRID_WIDTH * row_number + column_number
+        return self._cells[index]
+
     def get_row(self, row_number: int) -> list[Cell]:
         start_offset = GRID_WIDTH * row_number
         end_offset = GRID_WIDTH

@@ -64,6 +64,12 @@ def test_duplicate_value_in_box_throws_exception():
         """)
 
 
+def test_grid_returns_cell(grid: Grid):
+    assert grid.get_cell(0, 0) == Cell(0)
+    assert grid.get_cell(0, 8) == Cell(8)
+    assert grid.get_cell(8, 0) == Cell(72)
+    assert grid.get_cell(8, 8) == Cell(80)
+
 
 def test_grid_returns_cells_in_row(grid: Grid):
     assert grid.get_row(0) == [Cell(0), Cell(1), Cell(2), Cell(3), Cell(4), Cell(5), Cell(6), Cell(7), Cell(8)]

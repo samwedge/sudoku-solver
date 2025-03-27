@@ -1,6 +1,6 @@
 import logging
 
-from sudoku.constants import GRID_WIDTH, BOX_SIZE
+from sudoku.constants import GRID_WIDTH
 from sudoku.grid import Grid
 from sudoku.rules import Rules
 
@@ -27,18 +27,11 @@ class Solver:
 
         for row_number in range(GRID_WIDTH):
             for column_number in range(GRID_WIDTH):
-                row = self._grid.get_row(row_number)
-                column = self._grid.get_column(column_number)
-
-                horizontal = int((column_number - column_number % BOX_SIZE) / 3)
-                vertical = int((row_number - row_number % BOX_SIZE) / 3)
-                box = self._grid.get_box(horizontal, vertical)
-
-                cell = row[column_number]
+                cell = self._grid.get_cell(row_number, column_number)
                 if cell.value is None:
-                    row_candidates = Rules.missing_from_full_set(row)
-                    column_candidates = Rules.missing_from_full_set(column)
-                    box_candidates = Rules.missing_from_full_set(box)
+                    row_candidates = Rules.find_row_candidates(self._grid, row_number, column_number)
+                    column_candidates = Rules.find_column_candidates(self._grid, row_number, column_number)
+                    box_candidates = Rules.find_box_candidates(self._grid, row_number, column_number)
 
                     candidates = row_candidates & column_candidates & box_candidates
 
